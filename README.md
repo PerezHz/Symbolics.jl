@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.com/MasonProtter/Symbolics.jl.svg?branch=master)](https://travis-ci.com/MasonProtter/Symbolics.jl) [![Build status](https://ci.appveyor.com/api/projects/status/dmthyx5hr6udact2/branch/master?svg=true)](https://ci.appveyor.com/project/MasonProtter/symbolics-jl/branch/master) [![codecov](https://codecov.io/gh/MasonProtter/Symbolics.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/MasonProtter/Symbolics.jl)
+
+[![Coverage Status](https://coveralls.io/repos/github/PerezHz/Symbolics.jl/badge.svg?branch=master)](https://coveralls.io/github/PerezHz/Symbolics.jl?branch=master)
 # Symbolics.jl
 
 This is a package I'm throwing together after getting inspired by the talk [Physics in Clojure](https://www.youtube.com/watch?v=7PoajCqNKpg) which was about porting scmutils to clojure. scmutils is a Scheme package with a very interesting and powerful computer algebra system meant as a companion to the book [Structure and Interpretation of Classical Mechanics](https://mitpress.mit.edu/books/structure-and-interpretation-classical-mechanics-second-edition).
@@ -10,7 +12,7 @@ This package works on Julia 1.0. To add it, simply
 pkg> add git@github.com:MasonProtter/Symbolics.jl.git
 ```
 
-Note: This package is very much a work in progress! Don't rely on it for *anything* important. 
+Note: This package is very much a work in progress! Don't rely on it for *anything* important.
 
 Examples of use:
 1) Basic algebra
@@ -72,7 +74,7 @@ julia> D(x(t)^2 + 2x(t), t)
 ```
 
 # New: Generate the Euler Lagrange Equations from a Lagrangian
-We can now define a Lagrangian, say that of a simple harmonic oscillator as 
+We can now define a Lagrangian, say that of a simple harmonic oscillator as
 ```julia
 using Symbolics
 
@@ -97,10 +99,3 @@ julia> Lagrange_Equations(L)(x)(t)
 (D(D(x)))(t) * m + (x)(t) * m * ω ^ 2
 ```
 which when set equal to zero is the equation of motion for a simple harmonic oscillator, generated in pure Julia code code symbolically!
-
-
-
-
-
-
-
