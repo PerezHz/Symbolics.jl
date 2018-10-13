@@ -82,6 +82,7 @@ function binaryOp(f::Function, Dfx::Function, Dfy::Function)
     end
 end
 
+Base.:-(Dx::Differential) = unaryOp(x -> -x, x -> -1)(Dx)
 Base.:-(Dx::Differential, y::Number) = unaryOp(x -> x - y, x -> 1)(Dx)
 Base.:-(x::Number, Dy::Differential) = unaryOp(y -> x - y, y -> -1)(Dy)
 Base.:-(Dx::Differential, Dy::Differential) = binaryOp((x,y) -> x - y,
@@ -215,16 +216,14 @@ function ∂(i::Int)
     end
 end
 
-compute_partial(f, arg::UpTuple, i::Int) = compute_partial(f, arg, i, arg[i])
-
-function compute_partial(f, arg::UpTuple, i::Int, ::T) where {T <: Union{SymExpr, Differential}}
+function compute_partial(f, arg::UpTuple{T}, i::Int) where T
     ϵ = makeDiff()
-    val = [i==j ? arg[j]+ϵ : arg[j] for j in eachindex(arg)]
-    return extractDiff(f(UpTuple(val)), ϵ)
+    return UpTuple([  begin val = [i==j ? begin [l==k ? arg[j][k]+ϵ : arg[j][l]+0(ϵ) for l in eachindex(arg[j])] end : arg[j] for j in eachindex(arg)]; extractDiff( f(UpTuple(val)) , ϵ ) end for k in eachindex(arg[i])  ])
 end
 
-function compute_partial(f, arg::UpTuple, i::Int, ::UpTuple)
+function compute_partial(f, arg::UpTuple{T}, i::Int) where {T <: Union{Symbolic, Differential}}
     ϵ = makeDiff()
-    return UpTuple([  begin val = [i==j ? begin [l==k ? arg[j][k]+ϵ : arg[j][l] for l in eachindex(arg[j])] end : arg[j] for j in eachindex(arg)]; extractDiff( f(UpTuple(val)) , ϵ ) end for k in eachindex(arg[i])  ])
+    val = [i==j ? arg[j]+ϵ : arg[j]+0(ϵ) for j in eachindex(arg)]
+    return extractDiff(f(UpTuple(val)), ϵ)
 end
 # Calculus.jl:1 ends here

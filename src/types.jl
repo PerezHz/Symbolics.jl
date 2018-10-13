@@ -105,12 +105,12 @@ abstract type Structure end
 
 SymOrSymExpr = Union{Sym, SymExpr}
 
-struct UpTuple <: Structure
-    data::Vector
+struct UpTuple{T} <: Structure where T
+    data::Vector{T}
 end
 
-struct DownTuple <: Structure
-    data::Vector
+struct DownTuple{T} <: Structure where T
+    data::Vector{T}
 end
 
 function Base.show(io::IO, up::UpTuple)
