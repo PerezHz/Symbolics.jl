@@ -71,17 +71,17 @@ SymExpr(s::Symbol, args::Vector) = SymExpr(Sym(s), args)
 
 function convert_for_expr(ex::AbstractSymExpr)
     if (ex.op == identity) && (ex.args |> length == 1)
-	ex.args[1]
+        ex.args[1]
     else
-	Expr(ex)
+        Expr(ex)
     end
 end
 function convert_for_expr(ex::AbstractSym)
     try
-	eval(ex.name)
-	ex.name
+        eval(ex.name)
+        ex.name
     catch e
-	ex
+        ex
     end
 end
 convert_for_expr(x) = x
@@ -117,9 +117,9 @@ function Base.show(io::IO, up::UpTuple)
     arr = up.data
     print(io, "up($(arr[1])")
     if length(arr) > 1
-	for i in arr[2:end]
-	    print(io, "\n   $i")
-	end
+        for i in arr[2:end]
+            print(io, "\n   $i")
+        end
     end
     print(io, ")")
 end
@@ -167,26 +167,26 @@ Base.getindex(t::DTag, i::Int) = (t.tag)[i]
 
 function Base.isless(t1::DTag,t2::DTag)
     if length(t1) == length(t2)
-	for i in 1:length(t1)
-	    if t1[i] >= t2[i]
-		return false
-	    end
-	end
-	t1 == t2 ? (return false ) : (return true)
+        for i in 1:length(t1)
+            if t1[i] >= t2[i]
+                return false
+            end
+        end
+        t1 == t2 ? (return false ) : (return true)
     elseif length(t1) < length(t2)
-	true
+        true
     else
-	false
+        false
     end
 end
 
 function hasDuplicates(arr)
     for i in 1:(length(arr)-1)
-	for j in (i+1):length(arr)
-	    if arr[i] == arr[j]
-		return true
-	    end
-	end
+        for j in (i+1):length(arr)
+            if arr[i] == arr[j]
+                return true
+            end
+        end
     end
     false
 end
@@ -211,22 +211,22 @@ end
 
 function printEpsilons(t::DTag)
     str = ""
-    for i in t.tag
-        str = str*"ϵ$i"
-    end
+        for i in t.tag
+            str = str*"ϵ$i"
+        end
     str
 end
 
 function Base.show(io::IO, diff::Differential)
     str = ""
     for (tag, term) in diff.terms
-	if tag == DTag()
-	    str = str*"$(term)$(printEpsilons(tag))"
-	elseif str == ""
-	    str = str*"($(term))$(printEpsilons(tag))"
-	else
-	    str = str*" + ($(term))$(printEpsilons(tag))"
-	end
+        if tag == DTag()
+            str = str*"$(term)$(printEpsilons(tag))"
+        elseif str == ""
+            str = str*"($(term))$(printEpsilons(tag))"
+        else
+            str = str*" + ($(term))$(printEpsilons(tag))"
+        end
     end
     print(io, str)
 end
@@ -249,9 +249,9 @@ end
 function Base.getindex(Dx::Differential, i::UnitRange)
     keys = getTagList(Dx)[i]
     if length(i) == 1
-	out = (Dx.terms)[keys...]
+        out = (Dx.terms)[keys...]
     else
-	Differential(k => Dx.terms[k] for k in keys)
+        Differential(k => Dx.terms[k] for k in keys)
     end
 end
 
@@ -264,18 +264,18 @@ function tagUnion(x::Differential, y::Differential)
 end
 
 function fastuniq(v)
-  v1 = Vector{eltype(v)}()
-  if length(v)>0
-    laste = v[1]
-    push!(v1,laste)
-    for e in v
-      if e != laste
-	laste = e
-	push!(v1,laste)
-      end
+    v1 = Vector{eltype(v)}()
+    if length(v)>0
+        laste = v[1]
+        push!(v1,laste)
+        for e in v
+            if e != laste
+                laste = e
+                push!(v1,laste)
+            end
+        end
     end
-  end
-  return v1
+    return v1
 end
 
 tagCount = 0
