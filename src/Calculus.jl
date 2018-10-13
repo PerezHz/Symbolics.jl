@@ -215,14 +215,7 @@ function ∂(i::Int)
     end
 end
 
-# compute_partial(f, arg, i::Int) = begin @show arg[i]; compute_partial(f, arg, i, arg[i]) end
-compute_partial(f, arg::UpTuple, i::Int) = begin
-    @show f
-    @show arg
-    @show i
-    @show arg[i]
-    compute_partial(f, arg, i, arg[i])
-end
+compute_partial(f, arg::UpTuple, i::Int) = compute_partial(f, arg, i, arg[i])
 
 function compute_partial(f, arg::UpTuple, i::Int, ::T) where {T <: Union{SymExpr, Differential}}
     ϵ = makeDiff()
