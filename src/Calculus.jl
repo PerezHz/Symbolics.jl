@@ -211,17 +211,21 @@ function D(ex::Symbolic, s::AbstractSym)
 end
 
 function ∂(i::Int)
-    function (f)
-        arg -> compute_partial(f, arg, i)
+    function (f::Function)
+        arg -> begin
+            compute_partial(f, arg, i)
+        end
     end
 end
 
-function compute_partial(f, arg::UpTuple{T}, i::Int) where T
+compute_partial(f::Function, arg::UpTuple{T}, i::Int) where T = compute_partial(f, arg, i, arg[i])
+
+function compute_partial(f::Function, arg::UpTuple{T}, i::Int, ::UpTuple{S}) where {T, S <: Union{Symbolic, Differential}}
     ϵ = makeDiff()
     return UpTuple([  begin val = [i==j ? begin [l==k ? arg[j][k]+ϵ : arg[j][l]+0(ϵ) for l in eachindex(arg[j])] end : arg[j] for j in eachindex(arg)]; extractDiff( f(UpTuple(val)) , ϵ ) end for k in eachindex(arg[i])  ])
 end
 
-function compute_partial(f, arg::UpTuple{T}, i::Int) where {T <: Union{Symbolic, Differential}}
+function compute_partial(f::Function, arg::UpTuple{T}, i::Int, ::T) where {T <: Union{Symbolic, Differential}}
     ϵ = makeDiff()
     val = [i==j ? arg[j]+ϵ : arg[j]+0(ϵ) for j in eachindex(arg)]
     return extractDiff(f(UpTuple(val)), ϵ)
